@@ -1,0 +1,17 @@
+FROM mariadb:10
+
+USER root
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update && apt install -y tzdata tini \
+&& rm -rf /var/lib/apt/lists/*
+
+ADD build/mariadb/entrypoint /usr/bin/entrypoint
+RUN chmod +x /usr/bin/entrypoint
+
+# Uncomment the following line to add your own custom resources and database querys
+ADD fivem/setup/database.sql /docker-entrypoint-initdb.d/database.sql
+
+EXPOSE 3306
+
+ENTRYPOINT ["/bin/sh", "-c", "/usr/bin/tini -s -- /usr/bin/entrypoint"]

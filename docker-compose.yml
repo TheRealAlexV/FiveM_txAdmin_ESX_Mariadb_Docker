@@ -1,0 +1,55 @@
+---
+version: '2'
+services:
+# -------------------------------------------------------------------
+  fivem:
+    build:
+      context: .
+      dockerfile: Dockerfile.fivem
+      args:
+        FIVEM_VER: ${FIVEM_VER}
+        FIVEM_NUM: ${FIVEM_NUM}
+        DATA_VER: ${DATA_VER}
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./fivem/txData:/txData
+      - ./fivem/config:/config
+    ports:
+      - 30120:30120
+      - 30120:30120/udp
+      - 40120:40120
+    env_file:
+      - ./.env
+    depends_on:
+      - mariadb
+    networks:
+      - fivem
+# -------------------------------------------------------------------
+  mariadb:
+    build:
+      context: .
+      dockerfile: Dockerfile.mariadb
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mariadb:/var/lib/mysql
+    env_file:
+      - ./.env
+    networks:
+      - fivem
+# -------------------------------------------------------------------
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - 8100:80
+    env_file:
+      - ./.env
+    depends_on:
+      - mariadb
+    networks:
+      - fivem
+# -------------------------------------------------------------------
+networks:
+    fivem:
+        driver: bridge
