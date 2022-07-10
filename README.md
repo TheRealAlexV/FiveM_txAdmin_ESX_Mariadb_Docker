@@ -24,6 +24,8 @@ Use the docker-compose script as provided after configuring the Environment Vari
 To find the txAdmin login details and pin:
 `docker-compose logs | grep "All ready! Please access" -A 7 -B 2`
 
+Note: You should be able to access txAdmin from any IP bound to your docker host.
+
 ### Environment Varibles
 
 - `TXADMIN_PORT` - Port used for getting to txAdmin webgui. Will be used in the server.cfg.

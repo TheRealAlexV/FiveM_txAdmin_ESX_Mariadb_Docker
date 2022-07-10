@@ -1,0 +1,4 @@
+/.env
+/fivem/config/server.cfg
+/fivem/txData
+/mariadb
